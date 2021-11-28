@@ -90,8 +90,7 @@ def best_tree(W):
     Return the best "unrooted" spanning tree and its cost of a weight matrix
     """
     trees = all_unrooted_spanning_trees(W)
-    trees = sorted(trees, key=lambda x: x[1])
-    return trees[0]
+    return max(trees, key=lambda x: x[1])
 
 
 def best_rc_tree(W):
@@ -99,8 +98,7 @@ def best_rc_tree(W):
     Return the best "rooted" spanning tree and its cost of a weight matrix
     """
     trees = all_rooted_spanning_trees(W)
-    trees = sorted(trees, key=lambda x: x[1])
-    return trees[0]
+    return max(trees, key=lambda x: x[1])
 
 
 def kbest(W):
