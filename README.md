@@ -59,13 +59,13 @@ Please cite as:
 ## Requirements and Installation
 
 * Python version >= 3.6
-* For running the tests, we use the library package [arsenal](https://github.com/timvieira/arsenal)
+* For running the tests, we use [pytest](pytest.org)
 
 Installation:
 ```bash
 git clone https://github.com/rycolab/spanningtree
 cd spanningtree
-pip install -e .
+pip install -e .[tests]
 ```
 
 

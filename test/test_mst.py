@@ -3,7 +3,6 @@ from spanningtrees.mst import MST
 from spanningtrees.graph import Graph
 from spanningtrees.brute_force import best_tree, best_rc_tree
 from spanningtrees.util import random_instance
-from arsenal import ok, colors
 from tqdm import tqdm
 
 
@@ -12,7 +11,6 @@ def test_1b():
     Test that MST decoding's tree and score matches the
     brute-force decoding's tree and score on randomly generated dense graphs.
     """
-    print(colors.yellow % '# Regular')
     n = 6
     for _ in tqdm(range(100)):
         A = random_instance(n)
@@ -29,8 +27,6 @@ def test_1b():
             print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
-
-    print(ok)
 
 
 def test_1b_scc():
@@ -38,7 +34,6 @@ def test_1b_scc():
     Test that MST (using SCC) decoding's tree and score matches the
     brute-force decoding's tree and score on randomly generated dense graphs.
     """
-    print(colors.yellow % '# Regular SCC')
     n = 6
     for _ in tqdm(range(100)):
         A = random_instance(n)
@@ -56,15 +51,12 @@ def test_1b_scc():
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
 
-    print(ok)
-
 
 def test_c1b():
     """
     Test that root-constrained MST decoding's tree and score matches the
     brute-force decoding's tree and score on randomly generated dense graphs.
     """
-    print(colors.yellow % '# Root constraint')
     n = 6
     for _ in tqdm(range(100)):
         A = random_instance(n)
@@ -81,7 +73,6 @@ def test_c1b():
             print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
-    print(ok)
 
 
 def test_c1b_scc():
@@ -89,7 +80,6 @@ def test_c1b_scc():
     Test that root-constrained MST (using SCC) decoding's tree and score matches the
     brute-force decoding's tree and score on randomly generated dense graphs.
     """
-    print(colors.yellow % '# Root constraint SCC')
     n = 6
     for _ in tqdm(range(100)):
         A = random_instance(n)
@@ -106,11 +96,3 @@ def test_c1b_scc():
             print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
-    print(ok)
-
-
-if __name__ == '__main__':
-    test_1b()
-    test_1b_scc()
-    test_c1b()
-    test_c1b_scc()
