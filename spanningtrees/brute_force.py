@@ -1,3 +1,5 @@
+from typing import List, Tuple
+from numpy.typing import NDArray
 import numpy as np
 
 
@@ -21,9 +23,14 @@ def enumerate_directed_spanning_trees(A, root, root_weight):
                 cost_ij = A[i, j]
                 if j not in included and (i, j) not in excluded and cost_ij:
                     new_excluded += [(i, j)]
-                    dsts += enum_dst(cost + cost_ij, included + [j],
-                                     rest + [(i, j, cost_ij)], new_excluded)
+                    dsts += enum_dst(
+                        cost + cost_ij,
+                        included + [j],
+                        rest + [(i, j, cost_ij)],
+                        new_excluded,
+                    )
         return dsts
+
     return enum_dst(root_weight, [root], [], [])
 
 
@@ -42,13 +49,13 @@ def all_unrooted_spanning_trees(A):
     # No self loops
     np.fill_diagonal(A, 0)
     # No incoming edges to root
-    A[:, 0] = 0.
+    A[:, 0] = 0.0
     dsts = []
     unrooted_dsts = []
     for i in range(n):
         unrooted_dsts += enumerate_directed_spanning_trees(A, i, 0)
     for tree, cost in unrooted_dsts:
-        t = - np.ones(n)
+        t = -np.ones(n)
         for i, j, _ in tree:
             t[j] = i
         dsts.append((t, cost))
@@ -57,13 +64,13 @@ def all_unrooted_spanning_trees(A):
 
 def all_rooted_spanning_trees(W):
     """
-        Enumerate all spanning trees that are "rooted".
-        Rooted trees mean that exactly one edge can emanate from the
-        dummy root at 0.
-        Trees aer returned as numpy arrays where tree[j] = i indicates
-        that the tree has the edge (i, j) in it.
-        Trees are accompanied by their associated cost
-        """
+    Enumerate all spanning trees that are "rooted".
+    Rooted trees mean that exactly one edge can emanate from the
+    dummy root at 0.
+    Trees aer returned as numpy arrays where tree[j] = i indicates
+    that the tree has the edge (i, j) in it.
+    Trees are accompanied by their associated cost
+    """
     W = np.copy(W)
     # Root weights
     r = W[0, 1:]
@@ -77,7 +84,7 @@ def all_rooted_spanning_trees(W):
         if weight:
             rooted_dsts = enumerate_directed_spanning_trees(A, root, weight)
             for r_tree, cost in rooted_dsts:
-                tree = - np.ones(n + 1)
+                tree = -np.ones(n + 1, dtype=int)
                 tree[root + 1] = 0
                 for i, j, _ in r_tree:
                     tree[j + 1] = i + 1
@@ -91,6 +98,15 @@ def best_tree(W):
     """
     trees = all_unrooted_spanning_trees(W)
     return max(trees, key=lambda x: x[1])
+
+
+def all_best_trees(W: NDArray) -> Tuple[List[NDArray[np.int_]], float]:
+    """
+    Return all ex-æquo best "unrooted" spanning tree and their common cost, given a weight matrix
+    """
+    trees = all_unrooted_spanning_trees(W)
+    max_cost = max([cost for _, cost in trees])
+    return ([tree for tree, cost in trees if np.isclose(cost, max_cost)], max_cost)
 
 
 def best_rc_tree(W):
