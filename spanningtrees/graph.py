@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from spanningtrees.heap import Heap
 
@@ -8,7 +9,8 @@ class Edge(object):
     has an associated weight.
     It may optionally also have a label (in the case of multigraphs)
     """
-    __slots__ = 'src', 'tgt', 'weight', 'label'
+
+    __slots__ = "src", "tgt", "weight", "label"
 
     def __init__(self, src, tgt, weight, label=None):
         self.src = src
@@ -23,7 +25,7 @@ class Edge(object):
         return self.weight < other.weight
 
     def __repr__(self):
-        return f'{self.src}→ {self.tgt}'
+        return f"{self.src}→ {self.tgt}"
 
 
 class Node(object):
@@ -33,7 +35,8 @@ class Node(object):
     - a heap of incoming edge preferences.
 
     """
-    __slots__ = 'name', 'edges', 'id'
+
+    __slots__ = "name", "edges", "id"
 
     def __init__(self, name, edges, node_id):
         self.name = name
@@ -47,24 +50,21 @@ class Node(object):
         return self.id
 
     def __repr__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
 
 class Graph(dict):
-
     def __repr__(self):
-        return 'Graph({\n%s\n})' % (
-            '\n'.join(
-                f'  {node}: {[(src, w[0] if isinstance(w, tuple) else w.weight) for (src, w) in self[node].items()]}'
+        return "Graph({\n%s\n})" % (
+            "\n".join(
+                f"  {node}: {[(src, w[0] if isinstance(w, tuple) else w.weight) for (src, w) in self[node].items()]}"
                 for node in self
             )
         )
 
     def target_nodes(self, src):
         """Get the set of nodes pointed to by `src`, this method expensive O(|V|)."""
-        return {tgt for tgt in self
-                if tgt != src
-                if src in self[tgt]}
+        return {tgt for tgt in self if tgt != src if src in self[tgt]}
 
     def w(self, src, tgt):
         "Lookup edge weight"
@@ -72,10 +72,9 @@ class Graph(dict):
 
     def weight(self, tree):
         if isinstance(tree, np.ndarray):
-            return sum(self.w(src, tgt + 1)
-                       for tgt, src in enumerate(tree[1:]))
+            return math.fsum(self.w(src, tgt + 1) for tgt, src in enumerate(tree[1:]))
         else:  # tree is a dict
-            return sum(self.w(e.src, e.tgt) for e in tree.values())
+            return math.fsum(self.w(e.src, e.tgt) for e in tree.values())
 
     @classmethod
     def build(cls, graph):
@@ -83,7 +82,7 @@ class Graph(dict):
         Build a graph from a numpy array. We assume that 0 represents the dummy root
         """
         G = {}
-        n,m = graph.shape
+        n, m = graph.shape
         assert n == m
         ninf = -np.inf
         for tgt in range(1, n):
@@ -100,12 +99,14 @@ class Graph(dict):
         Create representation of graph as a list of (node, incomming_edges).
         This is needed for the MST algorithm
         """
-        return [(tgt, [Edge(src, tgt, self[tgt][src][0]) for src in self[tgt]])
-                for tgt in self]
+        return [
+            (tgt, [Edge(src, tgt, self[tgt][src][0]) for src in self[tgt]])
+            for tgt in self
+        ]
 
     @classmethod
     def from_multigraph(cls, graph):
-        """"
+        """ "
         Create a graph from a multigraph. We consider a multigraph to be represented as a dict
         where graph[tgt][src] is a list of all edges from src to tgt. We only need to take the
         best scoring (minimum weight) edge in order to compute the MST.
