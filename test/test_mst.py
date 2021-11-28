@@ -19,12 +19,6 @@ def test_1b():
         tree = mst.mst().to_array()
         cost = graph.weight(tree)
         tree_bf, cost_bf = best_tree(A)
-        if not np.allclose(tree, tree_bf):
-            print(A)
-            print("expected:", tree_bf)
-            print("\t cost:", cost_bf)
-            print("got:     ", tree)
-            print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
 
@@ -42,12 +36,6 @@ def test_1b_scc():
         tree = mst.mst_scc().to_array()
         cost = graph.weight(tree)
         tree_bf, cost_bf = best_tree(A)
-        if not np.allclose(tree, tree_bf):
-            print(A)
-            print("expected:", tree_bf)
-            print("\t cost:", cost_bf)
-            print("got:     ", tree)
-            print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
 
@@ -65,12 +53,6 @@ def test_c1b():
         tree = mst.mst().to_array()
         cost = graph.weight(tree)
         tree_bf, cost_bf = best_rc_tree(A)
-        if not np.allclose(tree, tree_bf):
-            print(A)
-            print("expected:", tree_bf)
-            print("\t cost:", cost_bf)
-            print("got:     ", tree)
-            print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
 
@@ -88,11 +70,5 @@ def test_c1b_scc():
         tree = mst.mst_scc().to_array()
         cost = graph.weight(tree)
         tree_bf, cost_bf = best_rc_tree(A)
-        if not np.allclose(tree, tree_bf):
-            print(A)
-            print("expected:", tree_bf)
-            print("\t cost:", cost_bf)
-            print("got:     ", tree)
-            print("\t cost:", cost)
         assert np.allclose(tree, tree_bf)
         assert np.allclose(cost, cost_bf)
