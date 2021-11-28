@@ -42,7 +42,7 @@ class Forest(dict):
 
     def to_array(self):
         # Note: assumes nodes are numbered 0 to n.
-        tree = -np.ones(len(self) + 1, dtype=np.int)
+        tree = -np.ones(len(self) + 1, dtype=int)
         for tgt, edge in self.items():
             tree[tgt.name] = edge.src
         return tree
