@@ -117,6 +117,15 @@ def best_rc_tree(W):
     return min(trees, key=lambda x: x[1])
 
 
+def all_best_rc_trees(W: NDArray) -> Tuple[List[NDArray[np.int_]], float]:
+    """
+    Return all ex-æquo best "unrooted" spanning tree and their common cost, given a weight matrix
+    """
+    trees = all_rooted_spanning_trees(W)
+    min_cost = min([cost for _, cost in trees])
+    return ([tree for tree, cost in trees if np.isclose(cost, min_cost)], min_cost)
+
+
 def kbest(W):
     trees = all_unrooted_spanning_trees(W)
     trees = sorted(trees, key=lambda x: x[1])
