@@ -22,7 +22,7 @@ class Edge(object):
         return Edge(self.src, self.tgt, self.weight, self.label)
 
     def __lt__(self, other):
-        return self.weight < other.weight
+        return (self.weight, self.src) < (other.weight, other.src)
 
     def __repr__(self):
         return f"{self.src}→ {self.tgt}"
