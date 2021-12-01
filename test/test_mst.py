@@ -1,25 +1,11 @@
-from typing import Optional
 from numpy.typing import NDArray
 import numpy as np
 from spanningtrees.mst import MST
 from spanningtrees.graph import Graph
 from spanningtrees.brute_force import all_best_trees, all_best_rc_trees
-from spanningtrees.util import random_instance
-from tqdm import tqdm
 from hypothesis import given, strategies as st
-from hypothesis.extra.numpy import arrays
 
-
-@st.composite
-def random_weights(
-    draw: st.DrawFn,
-    size: st.SearchStrategy[int],
-    weights_strategy: Optional[st.SearchStrategy[float]] = None,
-) -> NDArray[np.double]:
-    n = draw(size)
-    weights = draw(arrays(shape=(n, n), elements=weights_strategy, dtype=np.double))
-    return weights
-
+from conftest import random_weights
 
 # We use `exclude_min` here because for now, `best_tree` use `0.0` to mark a forbidden edge
 @given(
